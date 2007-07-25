@@ -6,8 +6,9 @@
  * @licence    M.I.T
  * @example:
  *
- *   Gettext.gettext('hello %s','world')
- *   _('hello %s','world')
+ *   Gettext.lang = 'de';
+ *   Gettext.gettext('hello %s','world');
+ *   _('hello %s','world');
  *
  */
 
@@ -83,14 +84,6 @@ jsGettext.prototype = {
 	// - The function throw error if argument lenght doesn't equal matches count (as specified in gettex file format documentation)	
 	// - Translations lookups
 	// Reference: http://www.gnu.org/software/gettext/manual/gettext.html#PO-Files
-	// ---
-	// Valid usages:
-	// Gettext.gettext('string %s afwe','a')
-	// Gettext.gettext('string %s, %s afwe','a','b')
-	// Gettext.gettext('string %s, %s afwe', ['a','b'])	
-	// 'string %s, %s afwe'.gettext(['a','b'])	
-	// Suggested usage:
-	// _('string %s, %s afwe', ['a','b'])
 	
 	gettext: function() {
 		if (!arguments || arguments.length < 1 || !RegExp) return;
@@ -108,8 +101,6 @@ jsGettext.prototype = {
 		}
 
 		// Try to find translated string
-		//console.log();
-		//Gettext.LCmessages[Gettext.lang]
 		if (Gettext.LCmessages[Gettext.lang] && Gettext.LCmessages[Gettext.lang].msgid.indexOf(str) != -1) {
 			str = Gettext.LCmessages[Gettext.lang].msgstr[Gettext.LCmessages[Gettext.lang].msgid.indexOf(str)];
 		}
