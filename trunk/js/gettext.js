@@ -18,14 +18,24 @@ jsGettext.prototype = {
 		this.lang         = lang || 'en';
 		this.debug        = true;
 		this.LCmessages   = {};
+		this.links        = [];
+		this.linksPointer = 0;
 		this.currentFetch = false;
 		this.init();
+		
+		new PeriodicalExecuter(function(pe) {
+  			if (Gettext.linksPointer == Gettext.links.length) pe.stop();
+  			else {
+  				Gettext.include.apply(Gettext, Gettext.links[Gettext.linksPointer])
+  				Gettext.linksPointer++;
+  			}
+		}, 0.5);
 	},
 	
 	init: function() {
-		this.include($$('link').map(function(link){
+		this.links = $$('link').map(function(link){
 			if (link.rel == 'gettext' && link.href && link.lang) return [link.lang, link.href];
-		}));
+		});
 	},
 
 	log: function() {
@@ -35,27 +45,18 @@ jsGettext.prototype = {
 	},
 	
 	include: function(lang, href) {
-		if (arguments.length == 1 && typeof arguments[0] == 'object') {
-			for (i=0;i<arguments[0].length;i++) {
-				this.include(arguments[0][i][0], arguments[0][i][1])
-			}
+		if (arguments[1].substring(0,7) == 'http://') {
+			onCompleteCallback = this.include_complete.bind(this);
+			this.currentFetch  = lang;
+			new Ajax.Request(arguments[1], {
+				onComplete: onCompleteCallback
+			});
 		}
 		else {
-			if (arguments[1].substring(0,7) == 'http://') {
-				onCompleteCallback = this.include_complete.bind(this);
-				this.currentFetch  = lang;
-				new Ajax.Request(arguments[1], {
-					onComplete: onCompleteCallback
-				});
-			}
-			else {
-				this.LCmessages[lang] = new jsGettext.Parse(str);
-				Gettext.log('Loading language: ', lang.toUpperCase(), ' (',str,')');
-			}
-			
-			//this.LCmessages.push('blah');
-			this.log('Loading language: ', lang.toUpperCase(), ' (',href,')');
+			this.LCmessages[lang] = new jsGettext.Parse(str);
+			Gettext.log('Loading language: ', lang.toUpperCase(), ' (',str,')');
 		}
+		this.log('Loading language: ', lang.toUpperCase(), ' (',href,')');
 	},
 	
 	include_complete: function (t) {
@@ -73,7 +74,6 @@ jsGettext.prototype = {
 				this.LCmessages[this.currentFetch].previousUntranslatedsPlurals.length]));
 			this.currentFetch = false;
 	},
-	
 
 	// This function based on public domain code. Feel free to take a look the original function at http://jan.moesen.nu/
 	// ---
