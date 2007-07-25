@@ -22,7 +22,9 @@ jsGettext.prototype = {
 		this.links        = [];
 		this.linksPointer = 0;
 		this.currentFetch = false;
-		this.init();
+		this.links        = $$('link').map(function(link){
+			if (link.rel == 'gettext' && link.href && link.lang) return [link.lang, link.href];
+		});
 		
 		new PeriodicalExecuter(function(pe) {
   			if (Gettext.linksPointer == Gettext.links.length) pe.stop();
@@ -31,12 +33,6 @@ jsGettext.prototype = {
   				Gettext.linksPointer++;
   			}
 		}, 0.5);
-	},
-	
-	init: function() {
-		this.links = $$('link').map(function(link){
-			if (link.rel == 'gettext' && link.href && link.lang) return [link.lang, link.href];
-		});
 	},
 
 	log: function() {
