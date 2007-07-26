@@ -46,7 +46,8 @@ jsGettext.prototype = {
 			onCompleteCallback = this.include_complete.bind(this);
 			this.currentFetch  = lang;
 			new Ajax.Request(arguments[1], {
-				onComplete: onCompleteCallback
+				onComplete: onCompleteCallback,
+				//asynchronous: false
 			});
 		}
 		else {
@@ -71,7 +72,7 @@ jsGettext.prototype = {
 				this.LCmessages[this.currentFetch].previousUntranslatedsPlurals.length]));
 			this.currentFetch = false;
 	},
-
+	
 	// This function based on public domain code. Feel free to take a look the original function at http://jan.moesen.nu/
 	// ---
 	// Changes made by Maxime Haineault (2007):
@@ -90,8 +91,8 @@ jsGettext.prototype = {
 		if (arguments.length == 1 && typeof arguments[0] == 'object') {
 			arguments = $A(arguments[0]);
 		}
-		
-		if (str.match('%','g').length != arguments.length) {
+		hasTokens = str.match('%','g');
+		if (hasTokens && hasTokens.length != arguments.length) {
 			Gettext.log('Gettext error: Arguments count ('+ arguments.length +') does not match replacement token count ('+ str.match('%','g').length +').');
 			return;
 		}
