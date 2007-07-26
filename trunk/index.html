@@ -1,12 +1,59 @@
 <html>
 <head>
 	<title>js-gettext | Demo</>	
-	<link rel="gettext" name="Deutch" lang="de" href="locale/de_test.po" />
-	<link rel="gettext" name="Deutch" lang="en" href="locale/de_test.po" />
-	
+	<link rel="gettext" lang="de" href="locale/de_test.po" />
+	<link rel="gettext" lang="fr" href="locale/fr_test.po" />
 	<script type="text/javascript" src="js/prototype.js"></script>
 	<script type="text/javascript" src="js/gettext.js"></script>
+	<script type="text/javascript">
+
+	function showTest(lang) {
+			Gettext.lang = lang;
+			$('lang-test').innerHTML  = _('The world is full of married men, %d',5) +'<br />';
+			$('lang-test').innerHTML += _('with wives who never understand') +'<br />';
+			$('lang-test').innerHTML += _('They\'re looking for someone to share') +'<br />';
+			$('lang-test').innerHTML += _('the excitement of a love affair') +'<br />';
+			$('lang-test').innerHTML += _('Just as soon as they find you') +'<br />';
+			$('lang-test').innerHTML += _('They warn you and darn you') +'<br />';
+			$('lang-test').innerHTML += _('You fly on the wings of romance') +'<br />';
+			$('lang-test').innerHTML += _('In the eyes of the world"') +'<br />';
+			$('lang-test').innerHTML += _('You\'re just another crazy girl') +'<br />';
+			$('lang-test').innerHTML += _('Who loves a married man');		
+	}
+	</script>
 </head>
 <body>
+<table cellpadding="0" cellspacing="0">
+	<tr>
+		<th>Original</th>
+		<th>
+			Output
+			<select onchange="showTest($F(this));">
+				<option selected>--</option>
+				<option value="en">English</option>
+				<option value="fr">French</option>
+				<option value="de">Deutch</option>
+			</select>			
+		</th>
+	</tr>
+	<tr>
+		<td>
+		<script type="text/javascript">
+		Gettext.lang = 'en';
+		document.write(  _('The world is full of married men, %d',5) +'<br />'  );
+		document.write(  _('with wives who never understand') +'<br />'  );
+		document.write(  _('They\'re looking for someone to share') +'<br />'  );
+		document.write(  _('the excitement of a love affair') +'<br />'  );
+		document.write(  _('Just as soon as they find you') +'<br />'  );
+		document.write(  _('They warn you and darn you') +'<br />'  );
+		document.write(  _('You fly on the wings of romance') +'<br />'  );
+		document.write(  _('In the eyes of the world"') +'<br />'  );
+		document.write(  _('You\'re just another crazy girl') +'<br />'  );
+		document.write(  _('Who loves a married man')  );
+		</script>
+		</td>
+		<td id="lang-test"></td>
+	</tr>
+</table>
 </body>
 </html>
